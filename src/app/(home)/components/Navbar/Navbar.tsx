@@ -66,7 +66,7 @@ export default function Navbar() {
                         href="/"
                         className="text-xl font-semibold tracking-wider hover:opacity-90"
                     >
-                        RITUAL
+                        Remote Kitchen
                     </Link>
                 </div>
 

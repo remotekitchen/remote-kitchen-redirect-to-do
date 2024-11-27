@@ -63,7 +63,7 @@ export default function HeroSection() {
   );
 
   return (
-    <div className="bg-gradient-to-b from-white to-gray-50 p-6 ">
+    <div className="bg-gradient-to-b from-white to-gray-50 md:!p-24 p-4 ">
       <div className="container mx-auto text-center">
         <h1 className="text-4xl font-bold text-gray-800 md:text-5xl">
           Delicious Food, Delivered to Your Doorstep
