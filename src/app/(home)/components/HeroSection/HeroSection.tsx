@@ -113,7 +113,7 @@ export default function HeroSection() {
           <div className="flex flex-col gap-4 md:flex-row md:justify-center">
             <Button
               type="submit"
-              className="hover:bg-primary-dark w-full rounded-full bg-primary px-6 py-4 font-medium text-white md:w-auto"
+              className="!bg-[#1f2937] w-full rounded-full bg-primary px-6 py-4 font-medium text-white md:w-auto"
             >
               {searchState.isLoading ? (
                 <Loader2 className="animate-spin" />

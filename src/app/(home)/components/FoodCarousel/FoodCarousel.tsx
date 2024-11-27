@@ -46,7 +46,7 @@ export default function FoodCarousel() {
                             className={`mx-2 flex h-[150px] min-w-[150px] flex-col items-center justify-center ${category?.color} rounded-xl shadow transition-transform hover:scale-105`}
                         >
                             <img
-                                src={`/assets/images/foodgallery/${category.image}`}
+                                src={`/${category.image}`}
                                 alt={category.label}
                                 className="h-[80px] w-[80px] rounded-full object-cover"
                             />
