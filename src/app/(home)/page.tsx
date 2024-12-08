@@ -5,7 +5,7 @@ import RestaurantSection from "./components/RestaurantSection/RestaurantSection"
 
 export default function Home() {
   return (
-    <div>
+    <div className="bg-gradient-to-b from-white to-gray-50">
       <Navbar />
       <div className="container mx-auto">
         <HeroSection />

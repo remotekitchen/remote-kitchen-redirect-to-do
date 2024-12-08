@@ -63,15 +63,17 @@ export default function HeroSection() {
   );
 
   return (
-    <div className="bg-gradient-to-b from-white to-gray-50 md:!p-24 p-4 ">
+    <div className=" md:!p-24 p-4 ">
       <div className="container mx-auto text-center">
-        <h1 className="text-4xl font-bold text-gray-800 md:text-5xl">
-          Delicious Food, Delivered to Your Doorstep
-        </h1>
-        <p className="mt-4 text-lg text-gray-600">
-          Find your favorite meals and get them delivered to your location in
-          minutes.
-        </p>
+        <div className='md:w-[800px] mx-auto'>
+          <h1 className="text-4xl font-bold text-gray-800 md:text-5xl">
+            Delicious Food, Delivered to Your Doorstep
+          </h1>
+          <p className="mt-4 text-lg text-gray-600">
+            Find your favorite meals and get them delivered to your location in
+            minutes.
+          </p>
+        </div>
 
         <form
           onSubmit={handleSubmit}

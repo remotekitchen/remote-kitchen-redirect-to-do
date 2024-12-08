@@ -1,10 +1,10 @@
 import { Button } from "@/components/ui/button";
-import { Card, CardContent, CardFooter, CardHeader } from "@/components/ui/card";
+import { Card, CardContent, CardHeader } from "@/components/ui/card";
 import { Clock, MapPin } from "lucide-react";
 import Image from "next/image";
 
 interface Restaurant {
-    id: string;
+    id: number;
     name: string;
     location: string;
     cuisineType: string[];
@@ -16,7 +16,7 @@ interface Restaurant {
 
 const restaurants: Restaurant[] = [
     {
-        id: "1",
+        id: 1,
         name: "Toranj Fine Foods",
         location: "Yonge/Steeles",
         cuisineType: ["Middle Eastern", "Asian"],
@@ -26,7 +26,7 @@ const restaurants: Restaurant[] = [
         imageUrl: "/resturant.png",
     },
     {
-        id: "2",
+        id: 2,
         name: "Salamat Bakery",
         location: "Steeles/Hilda",
         cuisineType: ["Baked Goods", "Sweets"],
@@ -36,7 +36,7 @@ const restaurants: Restaurant[] = [
         imageUrl: "/resturant.png",
     },
     {
-        id: "3",
+        id: 3,
         name: "EAT BKK Thai Kitchen & Bar",
         location: "Athabasca/Yonge",
         cuisineType: ["Thai", "Asian"],
@@ -46,7 +46,7 @@ const restaurants: Restaurant[] = [
         imageUrl: "/resturant.png",
     },
     {
-        id: "3",
+        id: 4,
         name: "EAT BKK Thai Kitchen & Bar",
         location: "Athabasca/Yonge",
         cuisineType: ["Thai", "Asian"],
@@ -56,7 +56,7 @@ const restaurants: Restaurant[] = [
         imageUrl: "/resturant.png",
     },
     {
-        id: "3",
+        id: 5,
         name: "EAT BKK Thai Kitchen & Bar",
         location: "Athabasca/Yonge",
         cuisineType: ["Thai", "Asian"],
@@ -66,7 +66,7 @@ const restaurants: Restaurant[] = [
         imageUrl: "/resturant.png",
     },
     {
-        id: "3",
+        id: 6,
         name: "EAT BKK Thai Kitchen & Bar",
         location: "Athabasca/Yonge",
         cuisineType: ["Thai", "Asian"],

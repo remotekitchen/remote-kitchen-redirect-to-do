@@ -14,12 +14,12 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 
-const menuItems = [
-    { name: "Shop", href: "#" },
-    { name: "About", href: "#" },
-    { name: "Journal", href: "#" },
-    { name: "Contact", href: "#" },
-]
+// const menuItems = [
+//     { name: "Shop", href: "#" },
+//     { name: "About", href: "#" },
+//     { name: "Journal", href: "#" },
+//     { name: "Contact", href: "#" },
+// ]
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = React.useState(false)
@@ -48,7 +48,7 @@ export default function Navbar() {
                             <SheetHeader>
                                 <SheetTitle>Menu</SheetTitle>
                             </SheetHeader>
-                            <div className="mt-8 flex flex-col gap-4">
+                            {/* <div className="mt-8 flex flex-col gap-4">
                                 {menuItems.map((item) => (
                                     <Link
                                         key={item.name}
@@ -59,7 +59,7 @@ export default function Navbar() {
                                         {item.name}
                                     </Link>
                                 ))}
-                            </div>
+                            </div> */}
                         </SheetContent>
                     </Sheet>
                     <Link
@@ -71,7 +71,7 @@ export default function Navbar() {
                 </div>
 
                 <div className="hidden lg:flex lg:items-center lg:gap-8">
-                    {menuItems.map((item, index) => (
+                    {/* {menuItems.map((item, index) => (
                         <motion.div
                             key={item.name}
                             initial={{ opacity: 0, y: -20 }}
@@ -85,11 +85,11 @@ export default function Navbar() {
                                 {item.name}
                             </Link>
                         </motion.div>
-                    ))}
+                    ))} */}
                 </div>
 
                 <div className="flex items-center gap-4">
-                    <Button
+                    {/* <Button
                         variant="ghost"
                         size="icon"
                         className="relative"
@@ -105,7 +105,7 @@ export default function Navbar() {
                                 {cartCount}
                             </motion.span>
                         )}
-                    </Button>
+                    </Button> */}
                     <Button size="sm" className="hidden sm:inline-flex">
                         Sign In
                     </Button>
