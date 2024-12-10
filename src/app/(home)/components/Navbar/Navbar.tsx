@@ -1,8 +1,7 @@
 "use client"
 
 import * as React from "react"
-import { motion } from "framer-motion"
-import { Menu, ShoppingCart, X } from 'lucide-react'
+import { Menu, X } from 'lucide-react'
 import Link from "next/link"
 
 import { Button } from "@/components/ui/button"
@@ -14,16 +13,10 @@ import {
     SheetTrigger,
 } from "@/components/ui/sheet"
 
-// const menuItems = [
-//     { name: "Shop", href: "#" },
-//     { name: "About", href: "#" },
-//     { name: "Journal", href: "#" },
-//     { name: "Contact", href: "#" },
-// ]
+
 
 export default function Navbar() {
     const [isOpen, setIsOpen] = React.useState(false)
-    const [cartCount, setCartCount] = React.useState(0)
 
     return (
         <nav className="sticky top-0 z-50 w-full border-b bg-background/80 backdrop-blur-lg">
@@ -106,9 +99,9 @@ export default function Navbar() {
                             </motion.span>
                         )}
                     </Button> */}
-                    <Button size="sm" className="hidden sm:inline-flex">
+                    {/* <Button size="sm" className="hidden sm:inline-flex">
                         Sign In
-                    </Button>
+                    </Button> */}
                 </div>
             </div>
         </nav>

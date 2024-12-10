@@ -1,6 +1,7 @@
 import FoodCarousel from "./components/FoodCarousel/FoodCarousel";
 import HeroSection from "./components/HeroSection/HeroSection";
 import Navbar from "./components/Navbar/Navbar";
+import { QuickCuisine } from "./components/QuickCuisine/QuickCuisine";
 import RestaurantSection from "./components/RestaurantSection/RestaurantSection";
 
 export default function Home() {
@@ -9,7 +10,8 @@ export default function Home() {
       <Navbar />
       <div className="container mx-auto">
         <HeroSection />
-        <FoodCarousel />
+        {/* <FoodCarousel /> */}
+        {/* <QuickCuisine /> */}
         <RestaurantSection />
       </div>
 
