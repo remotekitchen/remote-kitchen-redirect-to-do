@@ -6,10 +6,8 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import { MapPin, Search, Loader2, X, ChevronRight } from 'lucide-react';
 import { useDispatch } from 'react-redux';
-import LocateMe from '../LocateMe/LocateMe';
 import { useAppSelector } from '@/app/redux/hooks/hooks';
 import { setLocationData } from '@/app/redux/features/fetchLocation/fetchLocation';
-import GoogleMapsComponent from '../GoogleMapsComponent/GoogleMapsComponent';
 
 type Suggestion = {
     place_id: string;
@@ -37,12 +35,12 @@ export default function FindLocation() {
     const dispatch = useDispatch();
     const locateMeData = useAppSelector((state: any) => state.locateMe);
 
-
-    // console.log("locateMeData", locateMeData)
-
+    // Initialize address from Redux store
     useEffect(() => {
-        setAddress(locateMeData?.address)
-    }, [])
+        if (locateMeData?.address) {
+            setAddress(locateMeData.address || '');
+        }
+    }, [locateMeData?.address]);
 
     // Intro animation for container
     useEffect(() => {
@@ -72,21 +70,6 @@ export default function FindLocation() {
         }
     }, [suggestions]);
 
-    // Load Google Maps JavaScript API
-    // useEffect(() => {
-    //     const script = document.createElement('script');
-    //     script.src = `https://maps.googleapis.com/maps/api/js?key=${process.env.NEXT_PUBLIC_GOOGLE_MAP_SECRET}&libraries=places`;
-    //     script.async = true;
-    //     script.defer = true;
-    //     document.body.appendChild(script);
-
-    //     script.onload = () => console.log('Google Maps script loaded.');
-
-    //     return () => {
-    //         document.body.removeChild(script);
-    //     };
-    // }, []);
-
     const fetchLocation = useCallback(() => {
         if (!navigator.geolocation) return;
 
@@ -105,7 +88,7 @@ export default function FindLocation() {
                 geocoder.geocode({ location: latLng }, (results: any, status: any) => {
                     if (status === 'OK' && results[0]) {
                         const formattedAddress = results[0].formatted_address;
-                        setAddress(formattedAddress);
+                        setAddress(formattedAddress || '');
                         setIsLocated(true);
                         dispatch(
                             setLocationData({
@@ -125,7 +108,7 @@ export default function FindLocation() {
     }, [dispatch]);
 
     const handleInputChange = (e: React.ChangeEvent<HTMLInputElement>) => {
-        const value = e.target.value;
+        const value = e.target.value || '';
         setAddress(value);
         setSelectedIndex(-1);
         setIsLocated(false);
@@ -160,7 +143,7 @@ export default function FindLocation() {
     };
 
     const handleSuggestionClick = (suggestion: Suggestion) => {
-        setAddress(suggestion.description);
+        setAddress(suggestion.description || '');
         setSuggestions([]);
         setIsLocated(true);
     };
@@ -194,9 +177,6 @@ export default function FindLocation() {
             className="mx-auto flex h-full w-full max-w-4xl flex-col items-center space-y-8 px-4 py-8 sm:py-12"
             ref={containerRef}
         >
-            {/* <h1 className="my-0 bg-gradient-to-r from-purple-600 to-pink-600 bg-clip-text py-0 text-center text-4xl font-bold text-transparent">
-                Find Delicious Food Near You{' '}
-            </h1> */}
             <div className="relative w-full">
                 <div className="flex w-full flex-col gap-1 sm:flex-row">
                     <div className="relative flex-grow">
@@ -205,7 +185,7 @@ export default function FindLocation() {
                             type="text"
                             placeholder="Enter your address"
                             className="h-[55px] w-full rounded-full border-2 border-purple-300 px-6 py-2 pl-12 text-lg focus:border-transparent focus:outline-none focus:ring-2 focus:ring-purple-500"
-                            value={address}
+                            value={address || ''}
                             onChange={handleInputChange}
                         />
                         <div className="absolute left-4 top-1/2 -translate-y-1/2 transform">
@@ -235,9 +215,6 @@ export default function FindLocation() {
                             {isLocating ? 'Locating...' : 'Locate me'}
                         </Button>
                     </div>
-                </div>
-                <div className="flex items-center justify-center">
-                    {/* {isLocated && <FindFoodButton address={address} />} */}
                 </div>
                 {suggestions.length > 0 && (
                     <ul

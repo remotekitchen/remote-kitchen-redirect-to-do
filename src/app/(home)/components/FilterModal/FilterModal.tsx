@@ -33,7 +33,7 @@ export default function FilterModal({
     const searchParams = useSearchParams();
     const filterRef = React.useRef<HTMLDivElement>(null);
 
-    const sortingOptionsMap = {
+    const sortingOptionsMap: { [key: string]: string } = {
         'Comprehensive Ranking': 'comprehensive_ranking',
         'Fastest Delivery': 'fastest_delivery',
         'Lowest Delivery Fee': 'ldf',
@@ -43,6 +43,36 @@ export default function FilterModal({
 
     const timeDistances = ['30min', '40min', '50min', '60min'];
     const kmDistances = ['3 km', '7 km', '10 km', '20 km'];
+
+    // Initialize states based on URL parameters
+    React.useEffect(() => {
+        const params = new URLSearchParams(searchParams.toString());
+        const priceGte = params.get('price_gte');
+        const priceLte = params.get('price_lte');
+        const timeDistance = params.get('time_distance');
+        const kmDistance = params.get('km');
+        const search = params.get('search');
+        const cuisineParam = params.get('cuisine');
+
+        // Initialize sorting options
+        const activeSorting = Object.keys(sortingOptionsMap).filter((option) =>
+            params.has(sortingOptionsMap[option]),
+        );
+
+        if (priceGte && priceLte) {
+            setPriceRange([parseInt(priceGte, 10), parseInt(priceLte, 10)]);
+            setIsPriceChanged(true);
+        } else {
+            setPriceRange([0, 1000]);
+            setIsPriceChanged(false);
+        }
+
+        setSelectedSorting(activeSorting);
+        setSelectedTimeDistance(timeDistance ? `${timeDistance}min` : null);
+        setSelectedKmDistance(kmDistance ? `${kmDistance} km` : null);
+        setSearchInput(search || '');
+        setCuisine(cuisineParam || null);
+    }, [searchParams]);
 
     const toggleTimeDistance = (distance: string) => {
         setSelectedTimeDistance(selectedTimeDistance === distance ? null : distance);
@@ -70,6 +100,9 @@ export default function FilterModal({
         if (isPriceChanged) {
             params.price_gte = priceRange[0].toString();
             params.price_lte = priceRange[1].toString();
+        } else {
+            params.price_gte = undefined;
+            params.price_lte = undefined;
         }
 
         Object.entries(sortingOptionsMap).forEach(([label, key]) => {
@@ -79,31 +112,42 @@ export default function FilterModal({
         if (selectedTimeDistance) {
             // Remove "min" from the time distance value
             params.time_distance = selectedTimeDistance.replace('min', '').trim();
+        } else {
+            params.time_distance = undefined;
         }
 
         if (selectedKmDistance) {
             // Remove "km" from the km distance value
             params.km = selectedKmDistance.replace('km', '').trim();
+        } else {
+            params.km = undefined;
         }
 
         if (searchInput) {
             params.search = searchInput;
+        } else {
+            params.search = undefined;
         }
 
         if (cuisine) {
             params.cuisine = cuisine;
+        } else {
+            params.cuisine = undefined;
         }
 
         updateURLQuery(params);
         setShowFilterModal(false);
     };
 
-
     const clearFilters = () => {
         updateURLQuery({
             price_gte: undefined,
             price_lte: undefined,
-            sorting: undefined,
+            comprehensive_ranking: undefined,
+            fastest_delivery: undefined,
+            ldf: undefined,
+            most_rated: undefined,
+            nearest: undefined,
             time_distance: undefined,
             km: undefined,
             search: undefined,
@@ -149,7 +193,7 @@ export default function FilterModal({
                         exit={{ opacity: 0, y: 50 }}
                         transition={{ duration: 0.3 }}
                     >
-                        <div className="mb-6 flex justify-between items-center">
+                        <div className="mb-6 flex items-center justify-between">
                             <h2 className="text-2xl font-bold text-purple-700">Filter Options</h2>
                             <button
                                 onClick={() => setShowFilterModal(false)}
@@ -161,17 +205,21 @@ export default function FilterModal({
 
                         {/* Sorting Options */}
                         <div className="mb-6">
-                            <h3 className="mb-2 text-lg font-medium text-gray-800">Sorting Options</h3>
+                            <h3 className="mb-2 text-lg font-medium text-gray-800">
+                                Sorting Options
+                            </h3>
                             <div className="flex flex-wrap gap-3">
                                 {Object.keys(sortingOptionsMap).map((option) => (
                                     <Button
                                         key={option}
                                         variant="outline"
-                                        onClick={() => setSelectedSorting((prev) =>
-                                            prev.includes(option)
-                                                ? prev.filter((item) => item !== option)
-                                                : [...prev, option],
-                                        )}
+                                        onClick={() =>
+                                            setSelectedSorting((prev) =>
+                                                prev.includes(option)
+                                                    ? prev.filter((item) => item !== option)
+                                                    : [...prev, option],
+                                            )
+                                        }
                                         className={cn(
                                             'rounded-full border text-sm font-semibold',
                                             selectedSorting.includes(option)
@@ -187,15 +235,17 @@ export default function FilterModal({
 
                         {/* Time Distance */}
                         <div className="mb-6">
-                            <h3 className="mb-2 text-lg font-medium text-gray-800">Time Distance</h3>
+                            <h3 className="mb-2 text-lg font-medium text-gray-800">
+                                Time Distance
+                            </h3>
                             <div className="grid grid-cols-4 gap-3">
                                 {timeDistances.map((distance) => (
                                     <span
                                         key={distance}
                                         onClick={() => toggleTimeDistance(distance)}
                                         className={`flex cursor-pointer items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-all ${selectedTimeDistance === distance
-                                            ? 'bg-purple-200 text-purple-800 border border-purple-700'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-purple-100'
+                                                ? 'bg-purple-200 text-purple-800 border border-purple-700'
+                                                : 'bg-gray-100 text-gray-600 hover:bg-purple-100'
                                             }`}
                                     >
                                         {distance}
@@ -206,15 +256,17 @@ export default function FilterModal({
 
                         {/* KM Distance */}
                         <div className="mb-6">
-                            <h3 className="mb-2 text-lg font-medium text-gray-800">KM Distance</h3>
+                            <h3 className="mb-2 text-lg font-medium text-gray-800">
+                                KM Distance
+                            </h3>
                             <div className="grid grid-cols-4 gap-3">
                                 {kmDistances.map((distance) => (
                                     <span
                                         key={distance}
                                         onClick={() => toggleKmDistance(distance)}
                                         className={`flex cursor-pointer items-center justify-center rounded-full px-4 py-2 text-sm font-semibold transition-all ${selectedKmDistance === distance
-                                            ? 'bg-purple-200 text-purple-800 border border-purple-700'
-                                            : 'bg-gray-100 text-gray-600 hover:bg-purple-100'
+                                                ? 'bg-purple-200 text-purple-800 border border-purple-700'
+                                                : 'bg-gray-100 text-gray-600 hover:bg-purple-100'
                                             }`}
                                     >
                                         {distance}
@@ -248,6 +300,34 @@ export default function FilterModal({
                                 <span>${priceRange[1]}</span>
                             </div>
                         </div>
+
+                        {/* Search Input */}
+                        {/*
+                        <div className="mb-6">
+                            <h3 className="mb-2 text-lg font-medium text-gray-800">Search</h3>
+                            <input
+                                type="text"
+                                value={searchInput}
+                                onChange={(e) => setSearchInput(e.target.value)}
+                                className="w-full rounded border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                placeholder="Search..."
+                            />
+                        </div>
+                        */}
+
+                        {/* Cuisine Input */}
+                        {/*
+                        <div className="mb-6">
+                            <h3 className="mb-2 text-lg font-medium text-gray-800">Cuisine</h3>
+                            <input
+                                type="text"
+                                value={cuisine || ''}
+                                onChange={(e) => setCuisine(e.target.value)}
+                                className="w-full rounded border px-3 py-2 text-sm text-gray-700 focus:outline-none focus:ring-2 focus:ring-purple-500"
+                                placeholder="Cuisine..."
+                            />
+                        </div>
+                        */}
 
                         {/* Buttons */}
                         <div className="flex gap-3">
