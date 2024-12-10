@@ -10,25 +10,44 @@ const useSetLocation = () => {
     const location = useSelector((state: any) => state.locateMe);
 
     useEffect(() => {
-        // Get location data from cookies if not in Redux
-        const locationFromCookies = Cookies.get('location');
+        // Helper function to parse location safely
+        const parseLocation = (locationString: string | undefined) => {
+            if (!locationString) return null;
+            try {
+                return JSON.parse(locationString);
+            } catch (error) {
+                console.error('Error parsing location from cookies:', error);
+                return null;
+            }
+        };
 
+        // Fetch location from Redux or cookies
         let finalLocation = location;
-
-        // Parse cookie data if Redux doesn't have location
-        if (!finalLocation && locationFromCookies) {
-            finalLocation = JSON.parse(locationFromCookies);
+        if (!finalLocation || !finalLocation.lat || !finalLocation.lng) {
+            const locationFromCookies = Cookies.get('location');
+            finalLocation = parseLocation(locationFromCookies);
         }
 
-        // If we have location, set it in the URL
-        if (finalLocation?.lat && finalLocation?.long) {
+        // Validate finalLocation
+        if (finalLocation?.lat && finalLocation?.lng) {
+            // Use URLSearchParams to format query parameters
             const params = new URLSearchParams({
-                lat: finalLocation.lat,
-                long: finalLocation.long,
+                lat: String(finalLocation.lat),
+                lng: String(finalLocation.lng),
             });
 
-            // Set the query parameters without refreshing the page
-            router.replace(`?${params.toString()}`);
+            // Update the URL without causing re-renders
+            const currentUrlParams = new URLSearchParams(window.location.search);
+
+            // Avoid unnecessary URL updates
+            if (
+                currentUrlParams.get('lat') !== String(finalLocation.lat) ||
+                currentUrlParams.get('lng') !== String(finalLocation.lng)
+            ) {
+                router.replace(`?${params.toString()}`);
+            }
+        } else {
+            console.warn('Invalid location data. Ensure lat and lng are available.');
         }
     }, [location, router]);
 };
