@@ -6,7 +6,7 @@ import { motion, AnimatePresence } from 'framer-motion';
 
 export default function FilterModal({ showModal, setShowModal }: any) {
     // const [showModal, setShowModal] = useState(false);
-    const [filters, setFilters] = useState({
+    const [filters, setFilters] = useState<any>({
         tags: [],
         sortBy: '',
         distance: '',
@@ -60,15 +60,15 @@ export default function FilterModal({ showModal, setShowModal }: any) {
     };
 
     const selectSortingOption = (option: string) => {
-        setFilters((prev) => ({ ...prev, sortBy: option }));
+        setFilters((prev: any) => ({ ...prev, sortBy: option }));
     };
 
     const selectDistance = (distance: string) => {
-        setFilters((prev) => ({ ...prev, distance }));
+        setFilters((prev: any) => ({ ...prev, distance }));
     };
 
     const handlePriceRange = (range: string) => {
-        setFilters((prev) => ({ ...prev, priceRange: range }));
+        setFilters((prev: any) => ({ ...prev, priceRange: range }));
     };
 
     const handleClearFilters = () => {
