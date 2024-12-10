@@ -4,7 +4,8 @@ import { Loader2, Search, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import FilterModal from '../FilterModal/FilterModal';
-import FindLocation from '../FindLocation/FindLocation';
+import dynamic from 'next/dynamic';
+const FindLocation = dynamic(() => import('../FindLocation/FindLocation'), { ssr: false });
 
 declare global {
   interface Window {
@@ -91,8 +92,8 @@ export default function HeroSection() {
         )}
 
         <FilterModal
-          setShowModal={setShowFilterModal}
-          showModal={showFilterModal}
+          setShowFilterModal={setShowFilterModal}
+          showFilterModal={showFilterModal}
         />
       </div>
     </div>
