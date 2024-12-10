@@ -5,6 +5,7 @@ import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
 import FilterModal from '../FilterModal/FilterModal';
 import dynamic from 'next/dynamic';
+import { useRouter, useSearchParams } from 'next/navigation';
 const FindLocation = dynamic(() => import('../FindLocation/FindLocation'), { ssr: false });
 
 declare global {
@@ -23,14 +24,25 @@ export default function HeroSection() {
     isLoading: false,
   });
   const [showFilterModal, setShowFilterModal] = useState(false);
+  const searchParams = useSearchParams();
+  const router = useRouter()
 
   const handleInputChange = useCallback(
     (type: 'food' | 'address', value: string) => {
       setSearchState((prev) => ({ ...prev, [type]: value, error: null }));
-    },
-    [],
-  );
 
+      // Update URL with search query
+      const newSearchParams = new URLSearchParams(searchParams);
+      if (value) {
+        newSearchParams.set("search", value);
+      } else {
+        newSearchParams.delete("search");
+      }
+
+      router.replace(`?${newSearchParams.toString()}`, { scroll: false });
+    },
+    [router, searchParams]
+  );
 
 
   return (
@@ -47,7 +59,7 @@ export default function HeroSection() {
         </div>
 
         <div
-          className="mt-8 flex flex-col gap-6 md:gap-8"
+          className=" flex flex-col gap-6 md:gap-2"
         >
           <div className="grid md:grid-cols-2  grid-cols-1 items-center">
             <div>
@@ -67,7 +79,7 @@ export default function HeroSection() {
           </div>
 
           <div className="flex flex-col gap-4 md:flex-row md:justify-center">
-            <Button
+            {/* <Button
               type="submit"
               className="!bg-[#1f2937] w-full rounded-full bg-primary px-6 py-4 font-medium text-white md:w-auto"
             >
@@ -76,7 +88,7 @@ export default function HeroSection() {
               ) : (
                 'Find Food'
               )}
-            </Button>
+            </Button> */}
             <Button
               type="button"
               className="flex w-full items-center gap-2 rounded-full bg-gray-100 px-6 py-4 font-medium text-primary hover:bg-gray-200 md:w-auto"

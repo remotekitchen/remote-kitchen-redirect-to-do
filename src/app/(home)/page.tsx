@@ -11,7 +11,7 @@ export default function Home() {
       <div className="container mx-auto">
         <HeroSection />
         {/* <FoodCarousel /> */}
-        {/* <QuickCuisine /> */}
+        <QuickCuisine />
         <RestaurantSection />
       </div>
 

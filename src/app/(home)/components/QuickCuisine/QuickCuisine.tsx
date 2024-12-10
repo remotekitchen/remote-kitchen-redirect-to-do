@@ -9,31 +9,18 @@ import { cn } from '@/lib/utils';
 import { Button } from '@/components/ui/button';
 
 export const categories = [
-    { id: 'grocery', name: 'Grocery', icon: '🏪' },
-    { id: 'pizza', name: 'Pizza', icon: '🍕' },
-    { id: 'indian', name: 'Indian', icon: '🍛' },
-    { id: 'sushi', name: 'Sushi', icon: '🍱' },
-    { id: 'alcohol', name: 'Alcohol', icon: '🍾' },
-    { id: 'fast-food', name: 'Fast Food', icon: '🍟' },
-    { id: 'convenience', name: 'Convenience', icon: '🏪' },
-    { id: 'bubble-tea', name: 'Bubble Tea', icon: '🧋' },
     { id: 'chinese', name: 'Chinese', icon: '🥡' },
-    { id: 'korean', name: 'Korean', icon: '🍜' },
-    { id: 'desserts', name: 'Desserts', icon: '🍰' },
-    { id: 'burgers', name: 'Burgers', icon: '🍔' },
-    { id: 'wings', name: 'Wings', icon: '🍗' },
-    { id: 'soup', name: 'Soup', icon: '🥣' },
-    { id: 'vietnamese', name: 'Vietnamese', icon: '🍜' },
-    { id: 'mexican', name: 'Mexican', icon: '🌮' },
-    { id: 'healthy', name: 'Healthy', icon: '🥗' },
-    { id: 'thai', name: 'Thai', icon: '🍲' },
-    { id: 'halal', name: 'Halal', icon: '🥙' },
     { id: 'asian', name: 'Asian', icon: '🍱' },
-    { id: 'japanese', name: 'Japanese', icon: '🍱' },
+    { id: 'korean', name: 'Korean', icon: '🍜' },
+    { id: 'soup', name: 'Soup', icon: '🥣' },
+    { id: 'wings', name: 'Wings', icon: '🍗' },
     { id: 'bbq', name: 'BBQ', icon: '🍖' },
-    { id: 'sandwich', name: 'Sandwich', icon: '🥪' },
-    { id: 'ice-cream', name: 'Ice Cream', icon: '🍦' },
-    { id: 'electronics', name: 'Electronics', icon: '📱' },
+    { id: 'fast-food', name: 'Fast Food', icon: '🍟' },
+    { id: 'healthy', name: 'Healthy', icon: '🥗' },
+    { id: 'bubble-tea', name: 'Bubble Tea', icon: '🧋' },
+    { id: 'indian', name: 'Indian', icon: '🍛' },
+    { id: 'desserts', name: 'Desserts', icon: '🍰' },
+    { id: 'burger', name: 'Burger', icon: '🍔' },
 ];
 
 export function QuickCuisine() {
@@ -45,9 +32,7 @@ export function QuickCuisine() {
 
     const [prevBtnDisabled, setPrevBtnDisabled] = React.useState(true);
     const [nextBtnDisabled, setNextBtnDisabled] = React.useState(false);
-    const [selectedCategory, setSelectedCategory] = React.useState<string | null>(
-        null,
-    );
+    const [selectedCategory, setSelectedCategory] = React.useState<string | null>(null);
 
     const searchParams = useSearchParams();
     const router = useRouter();
@@ -61,12 +46,12 @@ export function QuickCuisine() {
 
     const scrollPrev = React.useCallback(
         () => emblaApi && emblaApi.scrollPrev(),
-        [emblaApi],
+        [emblaApi]
     );
 
     const scrollNext = React.useCallback(
         () => emblaApi && emblaApi.scrollNext(),
-        [emblaApi],
+        [emblaApi]
     );
 
     const onSelect = React.useCallback((emblaApi: any) => {
@@ -109,7 +94,7 @@ export function QuickCuisine() {
                                 variant="ghost"
                                 className={cn(
                                     'flex h-auto flex-col items-center gap-2 px-4 py-3 hover:bg-accent',
-                                    selectedCategory === category.id && 'bg-accent',
+                                    selectedCategory === category.id && 'bg-gray-200' // Active state with gray background
                                 )}
                                 onClick={() => toggleCategory(category.id)}
                             >
@@ -117,8 +102,8 @@ export function QuickCuisine() {
                                     className={cn(
                                         'flex h-16 w-16 items-center justify-center rounded-full',
                                         selectedCategory === category.id
-                                            ? 'bg-primary'
-                                            : 'bg-accent',
+                                            ? 'bg-primary text-white'
+                                            : 'bg-accent'
                                     )}
                                 >
                                     <span className="text-3xl">{category.icon}</span>
@@ -134,7 +119,7 @@ export function QuickCuisine() {
                 size="icon"
                 className={cn(
                     'absolute -left-4 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full bg-background shadow-md',
-                    prevBtnDisabled && 'hidden',
+                    prevBtnDisabled && 'hidden'
                 )}
                 disabled={prevBtnDisabled}
                 onClick={scrollPrev}
@@ -147,7 +132,7 @@ export function QuickCuisine() {
                 size="icon"
                 className={cn(
                     'absolute -right-4 top-1/2 z-10 h-8 w-8 -translate-y-1/2 rounded-full bg-background shadow-md',
-                    nextBtnDisabled && 'hidden',
+                    nextBtnDisabled && 'hidden'
                 )}
                 disabled={nextBtnDisabled}
                 onClick={scrollNext}

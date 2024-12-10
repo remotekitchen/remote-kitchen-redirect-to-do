@@ -17,7 +17,7 @@ export default function FilterModal({
     setShowFilterModal,
     showFilterModal,
 }: FilterModalProps) {
-    const [priceRange, setPriceRange] = React.useState<[number, number]>([20, 80]);
+    const [priceRange, setPriceRange] = React.useState<[number, number]>([0, 1000]);
     const [selectedSorting, setSelectedSorting] = React.useState<string[]>([]);
     const [selectedTimeDistance, setSelectedTimeDistance] = React.useState<string | null>(
         null,
@@ -27,6 +27,7 @@ export default function FilterModal({
     );
     const [searchInput, setSearchInput] = React.useState('');
     const [cuisine, setCuisine] = React.useState<string | null>(null);
+    const [isPriceChanged, setIsPriceChanged] = React.useState(false);
 
     const router = useRouter();
     const searchParams = useSearchParams();
@@ -66,19 +67,23 @@ export default function FilterModal({
     const applyFilters = () => {
         const params: Record<string, string | undefined> = {};
 
-        params.price_gte = priceRange[0].toString();
-        params.price_lte = priceRange[1].toString();
+        if (isPriceChanged) {
+            params.price_gte = priceRange[0].toString();
+            params.price_lte = priceRange[1].toString();
+        }
 
         Object.entries(sortingOptionsMap).forEach(([label, key]) => {
             params[key] = selectedSorting.includes(label) ? 'true' : undefined;
         });
 
         if (selectedTimeDistance) {
-            params.time_distance = selectedTimeDistance;
+            // Remove "min" from the time distance value
+            params.time_distance = selectedTimeDistance.replace('min', '').trim();
         }
 
         if (selectedKmDistance) {
-            params.km = selectedKmDistance;
+            // Remove "km" from the km distance value
+            params.km = selectedKmDistance.replace('km', '').trim();
         }
 
         if (searchInput) {
@@ -93,6 +98,7 @@ export default function FilterModal({
         setShowFilterModal(false);
     };
 
+
     const clearFilters = () => {
         updateURLQuery({
             price_gte: undefined,
@@ -103,7 +109,8 @@ export default function FilterModal({
             search: undefined,
             cuisine: undefined,
         });
-        setPriceRange([20, 80]);
+        setPriceRange([0, 1000]);
+        setIsPriceChanged(false);
         setSelectedSorting([]);
         setSelectedTimeDistance(null);
         setSelectedKmDistance(null);
@@ -115,6 +122,7 @@ export default function FilterModal({
     const handleSliderChange = (value: number | number[]) => {
         if (Array.isArray(value) && value.length === 2) {
             setPriceRange([value[0], value[1]]);
+            setIsPriceChanged(true);
         }
     };
 
@@ -221,7 +229,7 @@ export default function FilterModal({
                             <Slider
                                 range
                                 min={0}
-                                max={100}
+                                max={1000}
                                 value={priceRange}
                                 onChange={handleSliderChange}
                                 handleStyle={{
