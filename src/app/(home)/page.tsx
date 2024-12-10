@@ -7,7 +7,7 @@ import { QuickCuisine } from "./components/QuickCuisine/QuickCuisine";
 import RestaurantSection from "./components/RestaurantSection/RestaurantSection";
 
 export default function Home() {
-  // useSetLocation();
+  useSetLocation();
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-50">
