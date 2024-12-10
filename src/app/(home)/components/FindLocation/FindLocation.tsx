@@ -8,6 +8,7 @@ import { MapPin, Search, Loader2, X, ChevronRight } from 'lucide-react';
 import { useDispatch } from 'react-redux';
 import { useAppSelector } from '@/app/redux/hooks/hooks';
 import { setLocationData } from '@/app/redux/features/fetchLocation/fetchLocation';
+import Cookies from 'js-cookie';
 
 type Suggestion = {
     place_id: string;
@@ -142,10 +143,41 @@ export default function FindLocation() {
         }
     };
 
-    const handleSuggestionClick = (suggestion: Suggestion) => {
+    const handleSuggestionClick = async (suggestion: Suggestion) => {
         setAddress(suggestion.description || '');
         setSuggestions([]);
         setIsLocated(true);
+
+        if (window.google?.maps) {
+            const geocoder = new window.google.maps.Geocoder();
+            geocoder.geocode(
+                { address: suggestion.description },
+                (results: any, status: any) => {
+                    if (status === 'OK' && results[0]) {
+                        const location = results[0].geometry.location;
+                        const lat = location.lat();
+                        const lng = location.lng();
+
+                        // Update the URL with lat and lng
+                        const url = new URL(window.location.href);
+                        url.searchParams.set("lat", lat.toString());
+                        url.searchParams.set("lng", lng.toString());
+                        window.history.replaceState({}, "", url.toString());
+
+                        // Dispatch to Redux
+                        dispatch(
+                            setLocationData({
+                                address: suggestion.description,
+                                lat: lat.toString(),
+                                lng: lng.toString(),
+                            })
+                        );
+                    } else {
+                        console.error('Geocoding failed: ' + status);
+                    }
+                }
+            );
+        }
     };
 
     const handleLocateMe = () => {
@@ -164,6 +196,16 @@ export default function FindLocation() {
         fetchLocation();
         setTimeout(() => setIsLocating(false), 2400);
     };
+
+    useEffect(() => {
+        if (locateMeData && locateMeData?.lat && locateMeData?.long) {
+            console.log("locateMeData n ", locateMeData)
+            const url = new URL(window.location.href);
+            url.searchParams.set("lat", locateMeData?.lat);
+            url.searchParams.set("lng", locateMeData?.long);
+            window.history.replaceState({}, "", url.toString());
+        }
+    }, [address])
 
     const handleClearInput = () => {
         setAddress('');
@@ -188,6 +230,7 @@ export default function FindLocation() {
                             value={address || ''}
                             onChange={handleInputChange}
                         />
+
                         <div className="absolute left-4 top-1/2 -translate-y-1/2 transform">
                             <Search className="h-6 w-6 text-gray-500" />
                         </div>

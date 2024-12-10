@@ -5,9 +5,7 @@ import Cookies from 'js-cookie';
 
 const useSetLocation = () => {
     const router = useRouter();
-
-    // Select location data from Redux store
-    const location = useSelector((state: any) => state.locateMe);
+    const location = useSelector((state: any) => state.locateMe); // Ensure this is at the top level
 
     useEffect(() => {
         // Helper function to parse location safely
@@ -21,25 +19,22 @@ const useSetLocation = () => {
             }
         };
 
-        // Fetch location from Redux or cookies
+        // Final location logic
         let finalLocation = location;
+
         if (!finalLocation || !finalLocation.lat || !finalLocation.lng) {
             const locationFromCookies = Cookies.get('location');
             finalLocation = parseLocation(locationFromCookies);
         }
 
-        // Validate finalLocation
+        // Validate finalLocation and update URL
         if (finalLocation?.lat && finalLocation?.lng) {
-            // Use URLSearchParams to format query parameters
             const params = new URLSearchParams({
                 lat: String(finalLocation.lat),
                 lng: String(finalLocation.lng),
             });
 
-            // Update the URL without causing re-renders
             const currentUrlParams = new URLSearchParams(window.location.search);
-
-            // Avoid unnecessary URL updates
             if (
                 currentUrlParams.get('lat') !== String(finalLocation.lat) ||
                 currentUrlParams.get('lng') !== String(finalLocation.lng)
@@ -49,7 +44,7 @@ const useSetLocation = () => {
         } else {
             console.warn('Invalid location data. Ensure lat and lng are available.');
         }
-    }, [location, router]);
+    }, [router, location]); // Include `location` in the dependency array
 };
 
 export default useSetLocation;
