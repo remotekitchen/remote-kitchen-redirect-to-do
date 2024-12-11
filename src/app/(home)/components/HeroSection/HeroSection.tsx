@@ -44,6 +44,7 @@ export default function HeroSection() {
     [router, searchParams]
   );
 
+  console.log("s")
 
   return (
     <div className=" md:!p-24 p-4 ">
