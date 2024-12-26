@@ -3,6 +3,7 @@ import locateMeReducer from "./features/fetchLocation/fetchLocation";
 import storage from "redux-persist/lib/storage";
 import { persistReducer, persistStore, PersistConfig } from "redux-persist";
 import { apiSlice } from "./apiSlice";
+import { restaurantApi } from "./features/restaurantApi";
 
 // Type for the cart slice persist configuration
 type CartPersistConfig = PersistConfig<ReturnType<typeof rootReducer>> & {
@@ -20,6 +21,7 @@ const cartPersistConfig: CartPersistConfig = {
 const rootReducer = combineReducers({
   locateMe: locateMeReducer,
   [apiSlice.reducerPath]: apiSlice.reducer, // Include RTK Query reducer
+  [restaurantApi.reducerPath]: restaurantApi.reducer, // Include RTK Query reducer
 });
 
 // Type for root reducer persist configuration
@@ -31,7 +33,7 @@ type RootPersistConfig = PersistConfig<ReturnType<typeof rootReducer>> & {
 const persistConfig: RootPersistConfig = {
   key: "root",
   storage,
-  blacklist: [apiSlice.reducerPath], // Don't persist RTK Query cache
+  blacklist: [apiSlice.reducerPath, restaurantApi.reducerPath],
 };
 
 const persistedReducer = persistReducer(persistConfig, rootReducer);
@@ -51,7 +53,9 @@ export const store = configureStore({
           "persist/FLUSH",
         ],
       }, // Ignore warnings for redux-persist actions
-    }).concat(apiSlice.middleware),
+    })
+      .concat(apiSlice.middleware)
+      .concat(restaurantApi.middleware),
 });
 
 // Persistor for the store
