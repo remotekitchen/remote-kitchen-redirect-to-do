@@ -14,7 +14,7 @@ import { useGetRestaurantListQuery } from "@/app/redux/features/restaurantApi";
 
 
 
-const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://dev.chatchefs.com";
+const BASE_URL = "https://chatchefs.com";
 
 export default function RestaurantSection() {
     const router = useRouter();
