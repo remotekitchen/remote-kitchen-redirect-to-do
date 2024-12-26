@@ -10,29 +10,27 @@ import { useEffect, useState } from "react";
 import useSWR from "swr";
 import axios from "axios";
 import NoRestaurantFound from "../NoRestaurantFound/NoRestaurantFound";
+import { useGetRestaurantListQuery } from "@/app/redux/features/restaurantApi";
 
-const fetcher = async (url: string) => {
-    const response = await axios.get(url);
-    return response.data;
-};
+
 
 const BASE_URL = process.env.NEXT_PUBLIC_BASE_URL || "https://dev.chatchefs.com";
 
 export default function RestaurantSection() {
     const router = useRouter();
     const searchParams = useSearchParams();
-    // const [queryUrl, setQueryUrl] = useState(
-    //     "https://api.chatchefs.com/remote-kitchen/api/v1/restaurant/lists/chatchef?lat=49.2877294&lng=-123.1178804"
-    // );
+    const allParams = Object.fromEntries(searchParams.entries());
+    const queryString = new URLSearchParams(allParams).toString();
 
-    // const { data: allRestaurantData, isLoading: allRestaurantDataLoading } = useSWR(queryUrl, fetcher);
 
-    // useEffect(() => {
-    //     const baseUrl =
-    //         "https://api.chatchefs.com/remote-kitchen/api/v1/restaurant/lists/chatchef?lat=49.2877294&lng=-123.1178804";
-    //     const queryString = searchParams.toString();
-    //     setQueryUrl(queryString ? `${baseUrl}?${queryString}` : baseUrl);
-    // }, [searchParams]);
+    console.log("searchParams", allParams)
+
+    const { data: restaurantList, isLoading, refetch } = useGetRestaurantListQuery({
+        allParams: queryString,
+    })
+
+    console.log("restaurantList", restaurantList)
+
 
     const getRestaurantImageUrl = (avatarImage: any) => {
         if (avatarImage?.local_url) {
@@ -50,21 +48,18 @@ export default function RestaurantSection() {
         return `${BASE_URL}/${restaurantSlug}/${locationSlug}/menu`;
     };
 
-    const allRestaurantData: any = []
-
-    // console.log("allRestaurantData", allRestaurantData)
 
     return (
         <section className="w-full px-4 py-8 md:px-6 lg:px-8">
             <h2 className="mb-6 text-2xl font-bold">Restaurants near you</h2>
-            {true && (
+            {isLoading && (
                 <div className="flex items-center justify-center py-10 text-xl">
                     <h3>Loading...</h3>
                 </div>
             )}
             <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-                {allRestaurantData?.results.length ?
-                    allRestaurantData?.results?.map((restaurant: any) => (
+                {restaurantList?.results?.length ?
+                    restaurantList?.results?.map((restaurant: any) => (
                         <Card
                             style={{
                                 boxShadow: "rgba(0, 0, 0, 0.2) 0px 4px 12px",
@@ -172,7 +167,7 @@ export default function RestaurantSection() {
                     )) : null}
             </div>
             <div>
-                {allRestaurantData?.results.length <= 0 ? <NoRestaurantFound /> : null}
+                {restaurantList?.results?.length <= 0 ? <NoRestaurantFound /> : null}
             </div>
         </section>
     );

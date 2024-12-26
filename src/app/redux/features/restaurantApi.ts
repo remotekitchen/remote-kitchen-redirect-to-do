@@ -8,8 +8,7 @@ export const restaurantApi = createApi({
   }),
   endpoints: (builder) => ({
     getRestaurantList: builder.query({
-      query: ({ lat, lng }) =>
-        `restaurant/lists/chatchef?lat=${lat}&lng=${lng}`,
+      query: ({ allParams }) => `restaurant/lists/chatchef?${allParams}`,
     }),
   }),
 });
