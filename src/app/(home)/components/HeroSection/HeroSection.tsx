@@ -1,5 +1,5 @@
 'use client';
-import { useCallback, useState } from 'react';
+import { useState, useEffect } from 'react';
 import { Loader2, Search, Filter } from 'lucide-react';
 import { Input } from '@/components/ui/input';
 import { Button } from '@/components/ui/button';
@@ -25,31 +25,32 @@ export default function HeroSection() {
   });
   const [showFilterModal, setShowFilterModal] = useState(false);
   const searchParams = useSearchParams();
-  const router = useRouter()
+  const router = useRouter();
 
-  const handleInputChange = useCallback(
-    (type: 'food' | 'address', value: string) => {
-      setSearchState((prev) => ({ ...prev, [type]: value, error: null }));
+  // Load the search value from the URL on component mount
+  useEffect(() => {
+    const initialFood = searchParams.get('search') || '';
+    setSearchState((prev) => ({ ...prev, food: initialFood }));
+  }, [searchParams]);
 
-      // Update URL with search query
-      const newSearchParams = new URLSearchParams(searchParams);
-      if (value) {
-        newSearchParams.set("search", value);
-      } else {
-        newSearchParams.delete("search");
-      }
+  const handleInputChange = (type: 'food' | 'address', value: string) => {
+    setSearchState((prev) => ({ ...prev, [type]: value, error: null }));
 
-      router.replace(`?${newSearchParams.toString()}`, { scroll: false });
-    },
-    [router, searchParams]
-  );
+    // Update URL with search query
+    const newSearchParams = new URLSearchParams(searchParams);
+    if (value) {
+      newSearchParams.set('search', value);
+    } else {
+      newSearchParams.delete('search');
+    }
 
-  console.log("s")
+    router.replace(`?${newSearchParams.toString()}`, { scroll: false });
+  };
 
   return (
     <div className=" md:!p-24 p-4 ">
       <div className="container mx-auto text-center">
-        <div className='md:w-[800px] mx-auto'>
+        <div className="md:w-[800px] mx-auto">
           <h1 className="text-4xl font-bold text-gray-800 md:text-5xl">
             Delicious Food, Delivered to Your Doorstep
           </h1>
@@ -59,10 +60,8 @@ export default function HeroSection() {
           </p>
         </div>
 
-        <div
-          className=" flex flex-col gap-6 md:gap-2"
-        >
-          <div className="grid md:grid-cols-2  grid-cols-1 items-center">
+        <div className="flex flex-col gap-6 md:gap-2">
+          <div className="grid md:grid-cols-2 grid-cols-1 items-center">
             <div>
               <div className="relative flex-1">
                 <Search className="absolute left-4 top-1/2 -translate-y-1/2 transform text-gray-400" />
@@ -76,20 +75,9 @@ export default function HeroSection() {
               </div>
             </div>
             <FindLocation />
-
           </div>
 
           <div className="flex flex-col gap-4 md:flex-row md:justify-center">
-            {/* <Button
-              type="submit"
-              className="!bg-[#1f2937] w-full rounded-full bg-primary px-6 py-4 font-medium text-white md:w-auto"
-            >
-              {searchState.isLoading ? (
-                <Loader2 className="animate-spin" />
-              ) : (
-                'Find Food'
-              )}
-            </Button> */}
             <Button
               type="button"
               className="flex w-full items-center gap-2 rounded-full bg-gray-100 px-6 py-4 font-medium text-primary hover:bg-gray-200 md:w-auto"
