@@ -1,25 +1,27 @@
 "use client"
-import useSetLocation from "@/hooks/useSetLocation";
-import FoodCarousel from "./components/FoodCarousel/FoodCarousel";
+import { useState } from "react";
 import HeroSection from "./components/HeroSection/HeroSection";
 import Navbar from "./components/Navbar/Navbar";
 import { QuickCuisine } from "./components/QuickCuisine/QuickCuisine";
-import RestaurantSection from "./components/RestaurantSection/RestaurantSection";
+import RestaurantsList from "./components/RestaurantsList/RestaurantsList";
 
 export default function Home() {
-  // useSetLocation();
+  const [loading, setLoading] = useState(true)
 
   return (
     <div className="bg-gradient-to-b from-white to-gray-50">
-
       <Navbar />
       <div className="container mx-auto">
-        <HeroSection />
-        {/* <FoodCarousel /> */}
+        <HeroSection
+          loading={loading}
+          setLoading={setLoading}
+        />
         <QuickCuisine />
-        <RestaurantSection />
+        <RestaurantsList
+          loading={loading}
+          setLoading={setLoading}
+        />
       </div>
-
     </div>
   );
 }
