@@ -10,14 +10,14 @@ import { useAppSelector } from '@/app/redux/hooks/hooks';
 import { setLocationData } from '@/app/redux/features/fetchLocation/fetchLocation';
 import mapboxgl from 'mapbox-gl';
 
-mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_ACCESS_TOKEN;
+mapboxgl.accessToken = process.env.NEXT_PUBLIC_MAPBOX_KEY;
 
 type Suggestion = {
     id: string;
     place_name: string;
 };
 
-export default function FindLocation() {
+export default function FindLocation({ loading, setLoading }: any) {
     const [address, setAddress] = useState<string>('');
     const [isLocating, setIsLocating] = useState<boolean>(false);
     const [isSearching, setIsSearching] = useState<boolean>(false);
@@ -37,7 +37,7 @@ export default function FindLocation() {
 
     const fetchLocation = useCallback(() => {
         if (!navigator.geolocation) return;
-
+        setLoading(true)
         setIsLocating(true);
         navigator.geolocation.getCurrentPosition(
             async (position) => {
@@ -82,7 +82,6 @@ export default function FindLocation() {
         if (value.trim().length > 2) {
             setIsSearching(true);
             const url = `https://api.mapbox.com/geocoding/v5/mapbox.places/${encodeURIComponent(value)}.json?access_token=${mapboxgl.accessToken}&autocomplete=true&country=ca`;
-
             try {
                 const response = await fetch(url);
                 const data = await response.json();
@@ -109,6 +108,7 @@ export default function FindLocation() {
     };
 
     const handleSuggestionClick = async (suggestion: Suggestion) => {
+        setLoading(true)
         setAddress(suggestion.place_name);
         setSuggestions([]);
         setIsLocated(true);

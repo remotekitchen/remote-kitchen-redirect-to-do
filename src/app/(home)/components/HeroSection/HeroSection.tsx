@@ -15,7 +15,7 @@ declare global {
   }
 }
 
-export default function HeroSection() {
+export default function HeroSection({ loading, setLoading }: any) {
   const [searchState, setSearchState] = useState({
     food: '',
     address: '',
@@ -74,7 +74,10 @@ export default function HeroSection() {
                 />
               </div>
             </div>
-            <FindLocation />
+            <FindLocation
+              setLoading={setLoading}
+              loading={loading}
+            />
           </div>
 
           <div className="flex flex-col gap-4 md:flex-row md:justify-center">
